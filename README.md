@@ -12,6 +12,8 @@ In the attached screenshot, the extension will "eat" the content of pages whose 
 
 Nothing will happen until you click the Register script button. The button implements the user script according to the settings on this dialog. That means that you can experiment with the behavior of the script without having to implement an extensions yourself.
 
+# Additional info
+
 General API & this example is described on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/userScripts/Working_with_userScripts (unfortunately the described version & screenshots there belong to this version here & are not part of the official webextension-examples from MDN).
 
 Based on https://bugzilla.mozilla.org/attachment.cgi?id=9033244 within https://bugzilla.mozilla.org/show_bug.cgi?id=1516356#c1 & https://github.com/mdn/webextensions-examples/tree/master/user-script.
@@ -24,7 +26,7 @@ https://github.com/kekkc/webextensions-examples/blob/master/user-script/Release/
 Limitation:
 Only a copied proof of concept. Handles one script, doesn't support local "@require scripts" & has to be re-registered on FF restart.
 
-Additional info:
+Additional links:
 https://github.com/greasemonkey/greasemonkey/issues/2663
 https://github.com/erosman/support/issues/103#issuecomment-565829719
 
