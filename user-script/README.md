@@ -1,5 +1,7 @@
 # User script
 
+https://addons.mozilla.org/de/firefox/addon/user-script-poc/
+
 This extension demonstrates the `browser.userScripts.register()` API, which enables an extension to register URL-matching scripts at runtime which runs in isolated sandboxes.
 
 This extension adds a browser action that shows a popup. The popup lets you specify:
