@@ -1,82 +1,56 @@
-# webextensions-examples [![Build Status](https://travis-ci.org/mdn/webextensions-examples.svg?branch=master)](https://travis-ci.org/mdn/webextensions-examples)
+# Summary
 
-[https://github.com/mdn/webextensions-examples](https://github.com/mdn/webextensions-examples)
+Demonstration of userScripts.register. Runs at document-start, correct error messages, GM_getValue/GM_setValue/exportFunction/cloneInto support, limited for one userscript currently that has to be re-registered on Firefox start
 
-Maintained by the [MDN team at Mozilla](https://wiki.mozilla.org/MDN).
+# Description
 
-WebExtensions are a way to write browser extensions: that is, programs
-installed inside a web browser that modify the behaviour of the browser or
-of web pages loaded by the browser. They are built on a set of
-cross-browser APIs, so WebExtensions written for Google Chrome or Opera will
-in most cases run in Firefox or Edge too.
+Workaround until the userscript API is widely spread and usable with unsafeWindow & common, proper user script managern. This should be an extended proof of concept. Don't use this productively or for mission critical purpose. Install the addon & navigate to it's settings.
 
-The "webextensions-examples" repository is a collection of simple but complete
-and installable WebExtensions. You can use the examples to see how to use the
-WebExtensions APIs, and as a starting point for your own WebExtensions.
+The default code included with the example allows you to load a userScript which will "eat" the content of pages matching the Hosts entry. Make any changes you want to make before clicking the Register script button at the bottom of the panel.
 
-For an index of all the examples, see the ["Example extensions" page on MDN](https://developer.mozilla.org/Add-ons/WebExtensions/Examples).
+In the attached screenshot, the extension will "eat" the content of pages whose domain name ends in .org. This is the default behavior for this extension.
 
-The examples are made available under the
-[Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/).
+Nothing will happen until you click the Register script button. The button implements the user script according to the settings on this dialog. That means that you can experiment with the behavior of the script without having to implement an extensions yourself.
 
-## How to use "webextensions-examples"
+General API & this example is described on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/userScripts/Working_with_userScripts (unfortunately the described version & screenshots there belong to this version here & are not part of the official webextension-examples from MDN).
 
-To use the repository, first clone it.
+Based on https://bugzilla.mozilla.org/attachment.cgi?id=9033244 within https://bugzilla.mozilla.org/show_bug.cgi?id=1516356#c1 & https://github.com/mdn/webextensions-examples/tree/master/user-script.
 
-Each example is in its own top-level directory. Install an example in your
-favourite web browser ([installation instructions](#installing-an-example) are below),
-and see how it works. Each example has its own short README explaining what
-it does.
+Maintained on Github:
+https://github.com/kekkc/webextensions-examples/blob/master/user-script/Release/user-script.zip
+--> Use FF Developer > set xpinstall.signatures.required to false in about:config > load ZIP. Userscript can be reigstered from the extension options page.
+-->Alternatively use this AMO version here.
 
-To find your way around a WebExtension's internal structure, have a look at the
-[Anatomy of a WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Anatomy_of_a_WebExtension)
-page on MDN.
+Limitation:
+Only a copied proof of concept. Handles one script, doesn't support local "@require scripts" & has to be re-registered on FF restart.
 
-To use these examples in Firefox, you should use the most recent release
-of Firefox. Some examples work with earlier releases.
+Additional info:
+https://github.com/greasemonkey/greasemonkey/issues/2663
+https://github.com/erosman/support/issues/103#issuecomment-565829719
 
-A few examples rely on APIs that are currently only available in pre-release
-versions of Firefox. Where this is the case, the example should declare
-the minimum version that it needs in the `strict_min_version` part of the
-[applications key](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/applications)
-in its manifest.json file.
+# User script
 
-## Installing an example
+https://addons.mozilla.org/de/firefox/addon/userscripts-poc/
 
-There are a couple ways to try out the example extensions in this repository.
+This extension demonstrates the `browser.userScripts.register()` API, which enables an extension to register URL-matching scripts at runtime which runs in isolated sandboxes.
 
-1. Open Firefox and load `about:debugging` in the URL bar. Click the
-   [Load Temporary Add-on](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
-   button and select the `manifest.json` file within the
-   directory of an example extension you'd like to install.
-   Here is a [video](https://www.youtube.com/watch?v=cer9EUKegG4)
-   that demonstrates how to do this.
-2. Install the
-   [web-ext](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Getting_started_with_web-ext)
-   tool, change into the directory of the example extension
-   you'd like to install, and type `web-ext run`. This will launch Firefox and
-   install the extension automatically. This tool gives you some
-   additional development features such as
-   [automatic reloading](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Getting_started_with_web-ext#Automatic_extension_reloading).
+This extension adds a browser action that shows a popup. The popup lets you specify:
 
-## Support for other browsers
+* some code that comprises your content script
+* one or more [match patterns](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns), comma-separated. The content script will only be loaded into pages whose URLs match these patterns.
 
-These examples are only tested in Firefox. They may work in other browsers, if the [browser supports the APIs used](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs). Note though that these examples all use the name `browser` for the namespace and use promises to work with asynchronous functions. This means the examples won't work in Chrome unless you use the [polyfill provided by Mozilla](https://github.com/mozilla/webextension-polyfill). See [the overview of WebExtension APIs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API) for more information on this.
+Once these are set up you can register the user script by clicking "Register script". The extension will then register a "User Script" with the given properties by calling `browser.userScripts.register()`.
 
-## Learn more
+To keep things simple, you can only have one script registered at any time: if you click "Register script" again, the old script is unregistered. To do this, the extension keeps a reference to the `RegisteredUserScript` object returned from `browser.userScripts.register()`: this object provides the `unregister()` method.
 
-To learn more about developing WebExtensions, see the
-[WebExtensions documentation on MDN](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
-for getting started guides, tutorials, and full API reference docs.
+Note that the extension uses a background script to register the user scripts and to keep a reference to the `RegisteredUserScript` object. If it did not do this, then as soon as the popup window closed, the `RegisteredUserScript` would go out of scope and be destroyed, and the browser would then unregister the content script as part of cleanup.
 
-## Problems?
+## Default settings
 
-If you find a problem, please [file a bug](https://github.com/mdn/webextensions-examples/issues/new).
+The popup is initialized with some default values for the pattern and the code:
 
-If you need help, email the [dev-addons mailing list](https://mail.mozilla.org/listinfo/dev-addons) or contact the WebExtensions team in the #webextensions IRC channel on irc.mozilla.org.
+* the pattern `*://*.org/*`, which will load the script into any HTTP or HTTPS pages on a `.org` domain.
+* the code `document.body.innerHTML = '<h1>This page has been eaten<h1>'`
 
-## Contributing
-
-We welcome contributions, whether they are whole new examples, new features,
-bug fixes, or translations of localizable strings into new languages. Please
-see the [CONTRIBUTING.md](https://github.com/mdn/webextensions-examples/blob/master/CONTRIBUTING.md) file for more details.
+To try the extension out quickly, just click "Register script" with these defaults, and load http://example.org/ or 
+https://www.mozilla.org/. Then try changing the pattern or the code, and reloading these or related pages.
